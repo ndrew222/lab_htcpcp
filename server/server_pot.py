@@ -318,10 +318,10 @@ def create_request_response(method, message, additions, pour_milk_start):
             ).strftime(TIME_STRING_FORMAT)
             coffee_bean = COFFEE_BEANS[random.randint(0, COFFEE_BEANS_VARIETY)]
 
-            if additions == None:
+            if additions is None:
                 additions = []
 
-            if pour_milk_start == None:
+            if pour_milk_start is None:
                 milk_status = ""
             else:
                 milk_status = pour_milk_start
