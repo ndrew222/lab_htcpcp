@@ -11,11 +11,12 @@ A decently working computer with Python 3.10 or above, but **not** 3.12 installe
 
 ## How to run
 
-Using `pipenv`, install requirements stated in `Pipfile`, then start the shell:
+Using `uv`, install requirements and activate the virtual environment.
 
 ```
-pipenv install
-pipenv shell
+uv venv --python 3.10
+source .venv/bin/activate
+uv sync
 ```
 
 You can spawn **both** processes from the main file:
