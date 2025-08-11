@@ -181,7 +181,13 @@ def main(argv):
                     )
 
                     ## TODO: Create response headers 
-                    headers_to_send = []
+                    status_line = "HTCPCP/1.1 200 OK\r\n"
+                    headers_to_send = [
+                            status_line,
+                            "Server: CoffeePot\r\n",
+                            f"{content_type[0]}\r\n",
+                            f"Date: {current_date}\r\n\r\n"
+                            ]
 
                     response = create_request_response(
                         method, message, additions, pour_milk_start
@@ -195,7 +201,7 @@ def main(argv):
                     # TODO: Handle other cases that passes ensure_request_is_valid but isn't supported
                     # if we reach here, request is valid, but the server doesn't support this feature 
                     # e.g: 406
-                    final_response = ""
+                    final_response = "HTCPCP/1.1 406 Not Acceptable\r\n" + ", ".join(list(ACCEPTED_ADDITIONS.keys()))
                     
 
                 connection.send(bytes(final_response.encode("utf-8")))
