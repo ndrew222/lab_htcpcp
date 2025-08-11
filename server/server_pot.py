@@ -226,7 +226,7 @@ def ensure_request_is_valid(url, content_type, method, connection, requested_pot
     This method checks if the URL scheme is correct. You shall: 
     
     1. Validate the scheme against accepted_coffee_schemes
-    2. Check for correct URL path format
+    2. Check for correct URL path format <SCHEME>://<HOSTNAME>
     3. Validate the HTTP method: check method against accepted_methods
     4. Check the content type format to conform to "application/coffee-pot-command"
     5. Specific check for "tea" pot request
@@ -235,6 +235,29 @@ def ensure_request_is_valid(url, content_type, method, connection, requested_pot
 
     For each case 1 to 5 above, call send_error_message(error_message) with an appropriately crafted error message containing status code and reason-phrase. The arg not_found_message gives you a general idea of the format of the expected error message conforming to HTCPCP/1.0 protocol.
     """
+    print(f"url:\t{url}\n\n{content_type[0]}\n\nMethod:\t{method}\n not_found_message:\t{not_found_message}")
+    # 1. Validate scheme
+    scheme = url.split('://')[0]
+    if scheme not in accepted_coffee_schemes:
+        send_error_message(connection, b"HTCPCP/1.1 400 Scheme is not in accepted_coffee_schemes. Try coffee://\r\n\r\n")
+        return False
+    # 2. Validate path
+    hostname = url.split('://')[1]
+    if hostname != "ducky":
+        send_error_message(connection, b"HTCPCP/1.1 404 Your hostname is not ducky. Not good.")
+        return False
+    # 3. Validate method
+    if method not in accepted_methods:
+        send_error_message(connection, b"HTCPCP/1.1 501 Invalid method. Try again smh.")
+        return False
+    # 4. Validate content type
+    if content_type[0] != "Content-Type: application/coffee-pot-command":
+        send_error_message(connection, b"HTCPCP/1.1 415 uhh wrong Content-Type. It should be application/coffee-pot-command.")
+        return False
+    # 5. Check for tea
+    if requested_pot == "tea":
+        send_error_message(connection, b"HTCPCP/1.1 418 I'm a little teapot. That's haram af.\r\n\r\n")
+        return False
     return True
 
 def process_additions(headers, processing_request, connection):
